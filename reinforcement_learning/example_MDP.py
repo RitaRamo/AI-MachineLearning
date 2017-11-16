@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import model_based
 
+#Example of an MDP problem specification:
 
 WIND = (0, 0, 0, 1, 1, 1, 2, 2, 1, 0)
 nrows = 7

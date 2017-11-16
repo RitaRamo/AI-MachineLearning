@@ -45,14 +45,8 @@ def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interac
         else:
             current_state=next_state
     
-        '''
-        if(i%plot_x_interactions==0):
-            chart_norm[index]=np.linalg.norm(Q_optimal-Q)
-            index+=1
-        '''
-        
         chart_norm, index=savePlots(i,plot_x_interactions, chart_norm, index, Q_optimal, Q)
-    
+        
     return Q, chart_norm, index
 
 def savePlots(interaction,plot_x_interactions, chart_norm, index, Q_optimal, Q):
