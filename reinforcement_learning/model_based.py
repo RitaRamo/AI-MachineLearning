@@ -11,48 +11,54 @@ import numpy as np
 import random
 
 
-def get_Q(X, nA, Prob, c, gamma, initial_state,goal_state,  n_interactions, plot_x_interactions):
-    nX=len(X)
-    C_estimated=np.zeros((nX,nA))
-    Q=np.zeros((nX,nA))
+def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interactions, plot_x_interactions):
+    n_states=len(states)
+    C_estimated=np.zeros((n_states,n_actions))
+    Q=np.zeros((n_states,n_actions))
     Prob_estimated={}
-    for action in range(nA):
-        Prob_estimated[action]=np.eye(nX)
-    currentState=X.index(initial_state)
-    visits=np.zeros((nX,nA))
+    for action in range(n_actions):
+        Prob_estimated[action]=np.eye(n_states)
+    current_state=states.index(initial_state)
+    goal=states.index(goal_state)
+    visits=np.zeros((n_states,n_actions))
     chart_norm=np.zeros(int(n_interactions/plot_x_interactions))
     index=0
-    Q_optimal=Q_optimal_values.get_Q(nX, nA, Prob, c, gamma)
+    Q_optimal=Q_optimal_values.get_Q(n_states, n_actions, Prob, c, gamma)
     for i in range(n_interactions):  
-        action=e_greedy.select_action(Q,currentState, nA)
+        action=e_greedy.select_action(Q,current_state, n_actions)
+        step=1/(visits[current_state,action] + 1)
+        visits[current_state,action] += 1
+        C_estimated[current_state,action]=C_estimated[current_state,action]+step*(c[current_state, action]- C_estimated[current_state,action])
         
-        step=1/(visits[currentState,action] + 1)
-        visits[currentState,action] += 1
-        
-        C_estimated[currentState,action] = C_estimated[currentState,action]+ step*(c[currentState, action]- C_estimated[currentState,action])   #ponho gama
-        
-        next_state=np.random.choice(nX,p=Prob[action][currentState,:])
-        
-        for s in range(nX):  
+        next_state=np.random.choice(n_states,p=Prob[action][current_state,:])
+        for s in range(n_states):  
             if(s== next_state):
-                Prob_estimated[action][currentState, s]=Prob_estimated[action][currentState, s] + step*(1.0-Prob_estimated[action][currentState, s])
+                Prob_estimated[action][current_state, s]=Prob_estimated[action][current_state, s] + step*(1.0-Prob_estimated[action][current_state, s])
             else:
-                Prob_estimated[action][currentState, s]=Prob_estimated[action][currentState, s] + step*(-Prob_estimated[action][currentState, s])
+                Prob_estimated[action][current_state, s]=Prob_estimated[action][current_state, s] + step*(-Prob_estimated[action][current_state, s])
         
-        Qt_new=C_estimated[currentState,action] + gamma*np.sum( (Prob_estimated[action][currentState, :])*np.min(Q, axis=1))
-        Q[currentState, action]=Qt_new
+        Qt_new=C_estimated[current_state,action] + gamma*np.sum( (Prob_estimated[action][current_state, :])*np.min(Q, axis=1))
+        Q[current_state, action]=Qt_new
         
-    
-        if currentState==X.index(goal_state):
-            currentState=random.randint(0, nX-1)
+        if current_state==goal:
+            current_state=random.randint(0, n_states-1)
         else:
-            currentState=next_state
+            current_state=next_state
     
-        
+        '''
         if(i%plot_x_interactions==0):
             chart_norm[index]=np.linalg.norm(Q_optimal-Q)
             index+=1
+        '''
+        
+        chart_norm, index=savePlots(i,plot_x_interactions, chart_norm, index, Q_optimal, Q)
     
     return Q, chart_norm, index
+
+def savePlots(interaction,plot_x_interactions, chart_norm, index, Q_optimal, Q):
+    if(interaction%plot_x_interactions==0):
+        chart_norm[index]=np.linalg.norm(Q_optimal-Q)
+        index+=1
+    return chart_norm, index
 
 
