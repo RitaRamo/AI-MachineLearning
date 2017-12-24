@@ -12,7 +12,7 @@ import random
 
 
 
-def get_Q_learning(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interactions, plot_x_interactions,step, Q_optimal):
+def get_Q_learning(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interactions, plot_x_interactions, step,Q_optimal):
     n_states=len(states)
     Q_learning=np.zeros((n_states,n_actions))
     current_state=states.index(initial_state)

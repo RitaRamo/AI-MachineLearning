@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import model_based
 import q_learning
+import q_SARSA
 import Q_optimal_values
 
 
@@ -95,3 +96,14 @@ plt.xlabel('Iterations')
 plt.ylabel('Norm')
 plt.title('Q_learning')
 plt.show()  
+
+Q_SARSA, chart_values, index= q_SARSA.get_Q_SARSA(states, n_actions, P, c, gamma, init,goal, 100000, 500, Q_optimal)
+print("Q_sarsa:\n", Q_SARSA)
+plt.figure(3)
+plt.plot(np.arange(0,index), chart_values)
+plt.xlabel('Iterations')
+plt.ylabel('Norm')
+plt.title('Sarsa')
+plt.show() 
+
+
