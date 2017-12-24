@@ -7,11 +7,12 @@ Created on Mon Nov 13 22:11:44 2017
 
 import Q_optimal_values
 import e_greedy
+import plot_charts
 import numpy as np
 import random
 
 
-def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interactions, plot_x_interactions):
+def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interactions, plot_x_interactions, Q_optimal):
     n_states=len(states)
     C_estimated=np.zeros((n_states,n_actions))
     Q=np.zeros((n_states,n_actions))
@@ -22,8 +23,8 @@ def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interac
     goal=states.index(goal_state)
     visits=np.zeros((n_states,n_actions))
     chart_norm=np.zeros(int(n_interactions/plot_x_interactions))
-    index=0
-    Q_optimal=Q_optimal_values.get_Q(n_states, n_actions, Prob, c, gamma)
+    counter_chart=0
+    #Q_optimal=Q_optimal_values.get_Q(n_states, n_actions, Prob, c, gamma)
     for i in range(n_interactions):  
         action=e_greedy.select_action(Q,current_state, n_actions)
         step=1/(visits[current_state,action] + 1)
@@ -45,14 +46,8 @@ def get_Q(states, n_actions, Prob, c, gamma, initial_state,goal_state, n_interac
         else:
             current_state=next_state
     
-        chart_norm, index=savePlots(i,plot_x_interactions, chart_norm, index, Q_optimal, Q)
+        chart_norm, counter_chart=plot_charts.savePlots(i,plot_x_interactions, chart_norm, counter_chart, Q_optimal, Q)
         
-    return Q, chart_norm, index
-
-def savePlots(interaction,plot_x_interactions, chart_norm, index, Q_optimal, Q):
-    if(interaction%plot_x_interactions==0):
-        chart_norm[index]=np.linalg.norm(Q_optimal-Q)
-        index+=1
-    return chart_norm, index
+    return Q, chart_norm, counter_chart
 
 

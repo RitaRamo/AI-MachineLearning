@@ -9,6 +9,11 @@ Created on Mon Nov 13 23:51:45 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import model_based
+import q_learning
+import Q_optimal_values
+
+
+
 
 #Example of an MDP problem specification:
 
@@ -72,8 +77,8 @@ print(c)
 print('\nStart state:', init)
 print('\nGoal state:', goal)
 
-
-Q, chart_values, index=model_based.get_Q(states, n_actions, P, c, gamma, init,goal,  100000, 500)
+Q_optimal=Q_optimal_values.get_Q(n_states, n_actions, P, c, gamma)
+Q, chart_values, index=model_based.get_Q(states, n_actions, P, c, gamma, init,goal,  100000, 500,Q_optimal)
 print("Q:\n", Q)
 plt.figure(1)
 plt.plot(np.arange(0,index), chart_values)
@@ -81,3 +86,12 @@ plt.xlabel('Steps')
 plt.ylabel('Norm')
 plt.title('Model-based')
 plt.show()
+
+Q_learning, chart_values, index= q_learning.get_Q_learning(states, n_actions, P, c, gamma, init,goal, 100000, 500,0.3, Q_optimal)
+print("Q_learning:\n", Q_learning)
+plt.figure(2)
+plt.plot(np.arange(0,index), chart_values)
+plt.xlabel('Iterations')
+plt.ylabel('Norm')
+plt.title('Q_learning')
+plt.show()  
