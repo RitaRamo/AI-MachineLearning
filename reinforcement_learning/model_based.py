@@ -5,7 +5,6 @@ Created on Mon Nov 13 22:11:44 2017
 
 @author: RitaRamos"""
 
-import Q_optimal_values
 import e_greedy
 import plot_charts
 import numpy as np

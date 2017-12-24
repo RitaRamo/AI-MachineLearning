@@ -6,14 +6,6 @@ Created on Sun Dec 24 19:30:43 2017
 @author: RitaRamos
 """
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec 24 18:13:14 2017
-
-@author: RitaRamos
-"""
-
 import e_greedy
 import plot_charts
 import numpy as np
